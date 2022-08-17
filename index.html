@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+    <title>LaunchDarkly tutorial</title>
+    <script src="https://unpkg.com/launchdarkly-js-client-sdk@2"></script>
+  </head>
+
+  <style>
+  #box {
+    width: 200px;
+    height: 200px;
+    background-color: white;
+  }
+  #buttons {
+    margin-top: 20px;
+    margin-bottom: 50px;
+  }
+  </style>
+
+  <body>
+      <h1>An's Launch Darkly Feature Flag Demo</h1>
+      <div id=container>
+        <div id='box'></div>
+        <div id='buttons'>
+          <button id='yes'>yes</button>
+          <button id='no'>no</button>
+          <h3>Click one of the buttons above.</h3>
+        </div>
+      </div>
+      
+    </body>
+    <script>
+      var user = {
+        name:"ColorBox",
+        key: "ColorBox"
+      };
+
+      //initialize the client instance with environment-specific SDK key 
+      var ldclient = LDClient.initialize('62fa8ce8d5d537121556efe2', user);
+
+    
+      function createButton(){
+        //default value to false
+        var showFeature = ldclient.variation("ColorBox", false);
+        
+        if (showFeature) {
+          var button = document.createElement('button');
+          button.textContent = 'Say Hello!';
+          button.onclick = sayHello;
+          document.body.appendChild(button);
+          document.body.style.backgroundColor = "white";
+          choice();
+
+        } else {
+          var button = document.createElement('button');
+          button.textContent = 'Say Goodbye!';
+          button.onclick = sayGoodbye;
+          document.body.appendChild(button);
+          document.body.style.backgroundColor = "white";
+        }
+      }
+
+      ldclient.on('ready', createButton); 
+
+      function choice(){
+        var box = document.getElementById('box'); 
+        document.getElementById('buttons').addEventListener('click', function(evt) {
+        var target = evt.target;
+        if (target.id === 'yes') {
+          box.style.backgroundColor = '#70cf89';
+        } else if (target.id === 'no') {
+          box.style.backgroundColor = '#e06060';
+        } else {
+          box.style.backgroundColor = '#73bbe6';
+        }
+        }, false);
+      }
+
+
+      function sayHello(){
+        var message = 'hello there!!!';
+        alert(message);
+      }
+
+      function sayGoodbye(){
+        var message = 'goodbye for now!!!';
+        alert(message);
+      }
+
+    </script>
+
+  </body>
+</html>
